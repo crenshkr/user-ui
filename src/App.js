@@ -19,15 +19,21 @@ function reducer(state, action) {
       errorMessage: action.payload,
     };
   }
+  if (action.type === "SET_SELECTED_USER") {
+    return {
+      ...state,
+      selectedUser: action.payload,
+    };
+  }
 }
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const [users, setusers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState("");
+  // const [selectedUser, setSelectedUser] = useState("");
   const [teamMembers, setTeamMembers] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
+  // const [errorMessage, setErrorMessage] = useState("");
   // const [promptMessage, setPromptMessage] = useState("Please Select Users");
 
   useEffect(() => {
@@ -39,19 +45,28 @@ function App() {
   function handleOnCLick() {
     setTeamMembers(currentState => {
       switch (true) {
-        case selectedUser === "":
-          setErrorMessage("No User Selected");
-          // setPromptMessage();
+        case state.selectedUser === "":
+          dispatch({ type: "SET_ERROR_MESSAGE", payload: "No User Selected" });
+
           return currentState;
         case currentState.length > 2:
-          setErrorMessage("Maximum Limit Reached");
+          dispatch({
+            type: "SET_ERROR_MESSAGE",
+            payload: "Maximum Limit Reached",
+          });
           return currentState;
-        case currentState.includes(selectedUser):
-          setErrorMessage("Teammember Already Selected");
+        case currentState.includes(state.selectedUser):
+          dispatch({
+            type: "SET_ERROR_MESSAGE",
+            payload: "Teammember Already Selected",
+          });
           return currentState;
         default:
-          setErrorMessage("");
-          return [...currentState, selectedUser];
+          dispatch({
+            type: "SET_ERROR_MESSAGE",
+            payload: "",
+          });
+          return [...currentState, state.selectedUser];
       }
     });
   }
@@ -59,8 +74,10 @@ function App() {
     <div className="App">
       <div className="body">
         <div className="left-column">
-          <SelectionInfo userName={selectedUser} />
+          <SelectionInfo userName={state.selectedUser} />
           <button onClick={handleOnCLick}>Add Teammate</button>
+
+          {/* selected members window window nees to be made ---> */}
 
           <div>
             <p className="chosen-team-members">Chosen Team Members:</p>
@@ -68,19 +85,19 @@ function App() {
               <p key={teamMember}>{`${index + 1}: ${teamMember}`}</p>
             ))}
           </div>
+          {/* error message window nees to be made ---> */}
           <div>
-            <p style={{ color: "red" }}>{errorMessage}</p>
+            <p style={{ color: "red" }}>{state.errorMessage}</p>
           </div>
+
+          {/* user prompt window window nees to be made ---> */}
+
           <div>
             <p style={{ color: "green" }}>{state.promptMessage}</p>
           </div>
         </div>
         <div className="right-column">
-          <Cards
-            users={users}
-            setSelectedUser={setSelectedUser}
-            setErrorMessage={setErrorMessage}
-          />
+          <Cards users={users} dispatch={dispatch} />
         </div>
       </div>
     </div>

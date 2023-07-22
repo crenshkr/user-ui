@@ -1,17 +1,12 @@
 import React from "react";
 import { Card } from "./Card/Card";
 
-export function Cards({ users, setSelectedUser, setErrorMessage }) {
+export function Cards({ users, dispatch }) {
   return (
     <>
       {users.length > 0 &&
         users.map(user => (
-          <Card
-            user={user}
-            key={user.id}
-            setSelectedUser={setSelectedUser}
-            setErrorMessage={setErrorMessage}
-          />
+          <Card user={user} key={user.id} dispatch={dispatch} />
         ))}
     </>
   );

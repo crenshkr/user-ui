@@ -1,12 +1,13 @@
 import "./Card.css";
 
-export function Card({ user, setSelectedUser, setErrorMessage }) {
+export function Card({ user, dispatch }) {
   return (
     <div
       className="card"
       onClick={() => {
-        setSelectedUser(user.name);
-        setErrorMessage("");
+        // setSelectedUser(user.name);
+        dispatch({ type: "SET_SELECTED_USER", payload: user.name });
+        dispatch({ type: "SET_ERROR_MESSAGE", payload: "" });
       }}
     >
       Id:{user.id}
