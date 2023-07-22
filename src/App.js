@@ -12,62 +12,97 @@ const initialState = {
   promptMessage: "Please Select Users",
 };
 
+// function reducer(state, action) {
+//   if (action.type === "SET_ERROR_MESSAGE") {
+//     return {
+//       ...state,
+//       errorMessage: action.payload,
+//     };
+//   }
+//   if (action.type === "SET_SELECTED_USER") {
+//     return {
+//       ...state,
+//       selectedUser: action.payload,
+//     };
+//   }
+// }
+
 function reducer(state, action) {
-  if (action.type === "SET_ERROR_MESSAGE") {
-    return {
-      ...state,
-      errorMessage: action.payload,
-    };
-  }
-  if (action.type === "SET_SELECTED_USER") {
-    return {
-      ...state,
-      selectedUser: action.payload,
-    };
+  switch (action.type) {
+    case "SET_USERS":
+      return {
+        ...state,
+        users: action.payload,
+      };
+    case "SET_ERROR_MESSAGE":
+      return {
+        ...state,
+        errorMessage: action.payload,
+      };
+    case "SET_SELECTED_USER":
+      return {
+        ...state,
+        selectedUser: action.payload,
+      };
+    case "SET_TEAM_MEMBERS":
+      return {
+        ...state,
+        teamMembers: action.payload,
+      };
+    default:
+      return state;
   }
 }
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const [users, setusers] = useState([]);
+  // const [users, setusers] = useState([]);
   // const [selectedUser, setSelectedUser] = useState("");
-  const [teamMembers, setTeamMembers] = useState([]);
+  // const [teamMembers, setTeamMembers] = useState([]);
   // const [errorMessage, setErrorMessage] = useState("");
   // const [promptMessage, setPromptMessage] = useState("Please Select Users");
 
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
       .then(response => response.json())
-      .then(users => setusers(users));
+      // payload is users instead of []
+      .then(users => dispatch({ type: "SET_USERS", payload: users }));
   }, []);
 
   function handleOnCLick() {
-    setTeamMembers(currentState => {
-      switch (true) {
-        case state.selectedUser === "":
-          dispatch({ type: "SET_ERROR_MESSAGE", payload: "No User Selected" });
+    // payload is switch function instead of [] for setTeamMembers & currentState is now state.teamMembers
+    dispatch({
+      type: "SET_TEAM_MEMBERS",
+      payload: (() => {
+        switch (true) {
+          case state.selectedUser === "":
+            dispatch({
+              type: "SET_ERROR_MESSAGE",
+              payload: "No User Selected",
+            });
 
-          return currentState;
-        case currentState.length > 2:
-          dispatch({
-            type: "SET_ERROR_MESSAGE",
-            payload: "Maximum Limit Reached",
-          });
-          return currentState;
-        case currentState.includes(state.selectedUser):
-          dispatch({
-            type: "SET_ERROR_MESSAGE",
-            payload: "Teammember Already Selected",
-          });
-          return currentState;
-        default:
-          dispatch({
-            type: "SET_ERROR_MESSAGE",
-            payload: "",
-          });
-          return [...currentState, state.selectedUser];
-      }
+            return state.teamMembers;
+          case state.teamMembers.length > 2:
+            dispatch({
+              type: "SET_ERROR_MESSAGE",
+              payload: "Maximum Limit Reached",
+            });
+            return state.teamMembers;
+          case state.teamMembers.includes(state.selectedUser):
+            dispatch({
+              type: "SET_ERROR_MESSAGE",
+              payload: "Teammember Already Selected",
+            });
+            return state.teamMembers;
+          default:
+            dispatch({
+              type: "SET_ERROR_MESSAGE",
+              payload: "",
+            });
+            return [...state.teamMembers, state.selectedUser];
+        }
+      })(),
     });
   }
   return (
@@ -81,7 +116,7 @@ function App() {
 
           <div>
             <p className="chosen-team-members">Chosen Team Members:</p>
-            {teamMembers.map((teamMember, index) => (
+            {state.teamMembers.map((teamMember, index) => (
               <p key={teamMember}>{`${index + 1}: ${teamMember}`}</p>
             ))}
           </div>
@@ -97,7 +132,7 @@ function App() {
           </div>
         </div>
         <div className="right-column">
-          <Cards users={users} dispatch={dispatch} />
+          <Cards users={state.users} dispatch={dispatch} />
         </div>
       </div>
     </div>
