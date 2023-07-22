@@ -1,11 +1,12 @@
 import "./Card.css";
 
-export function Card({ user, setSelectedUser }) {
+export function Card({ user, setSelectedUser, setErrorMessage }) {
   return (
     <div
       className="card"
       onClick={() => {
         setSelectedUser(user.name);
+        setErrorMessage("");
       }}
     >
       Id:{user.id}
