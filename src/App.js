@@ -3,7 +3,9 @@ import { useState, useEffect, useReducer } from "react";
 import "./App.css";
 import { Cards } from "./components/Cards";
 import { SelectionInfo } from "./components/SelectionInfo/SelectionInfo";
-
+import { SelectedMembers } from "./components/SelectedMembers/SelectedMembers";
+import { ErrorMessage } from "./components/ErrorMessage/ErrorMessage";
+import { PromptMessage } from "./components/PromptMessage/PromptMessage";
 const initialState = {
   users: [],
   selectedUser: "",
@@ -111,25 +113,9 @@ function App() {
         <div className="left-column">
           <SelectionInfo userName={state.selectedUser} />
           <button onClick={handleOnCLick}>Add Teammate</button>
-
-          {/* selected members window window nees to be made ---> */}
-
-          <div>
-            <p className="chosen-team-members">Chosen Team Members:</p>
-            {state.teamMembers.map((teamMember, index) => (
-              <p key={teamMember}>{`${index + 1}: ${teamMember}`}</p>
-            ))}
-          </div>
-          {/* error message window nees to be made ---> */}
-          <div>
-            <p style={{ color: "red" }}>{state.errorMessage}</p>
-          </div>
-
-          {/* user prompt window window nees to be made ---> */}
-
-          <div>
-            <p style={{ color: "green" }}>{state.promptMessage}</p>
-          </div>
+          <SelectedMembers teamMembers={state.teamMembers} />
+          <ErrorMessage errorMessage={state.errorMessage} />
+          <PromptMessage promptMessage={state.promptMessage} />
         </div>
         <div className="right-column">
           <Cards users={state.users} dispatch={dispatch} />
