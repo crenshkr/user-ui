@@ -6,6 +6,7 @@ import { SelectionInfo } from "./components/SelectionInfo/SelectionInfo";
 import { SelectedMembers } from "./components/SelectedMembers/SelectedMembers";
 import { ErrorMessage } from "./components/ErrorMessage/ErrorMessage";
 import { PromptMessage } from "./components/PromptMessage/PromptMessage";
+import { teamSelectionReducer } from "./state/reducers/teamSelectionReducer";
 
 const initialState = {
   users: [],
@@ -15,37 +16,8 @@ const initialState = {
   promptMessage: "Please Select Users",
 };
 
-function reducer(state, action) {
-  switch (action.type) {
-    case "SET_USERS":
-      return {
-        ...state,
-        users: action.payload,
-      };
-    case "SET_ERROR_MESSAGE":
-      return {
-        ...state,
-        errorMessage: action.payload,
-      };
-    case "SET_SELECTED_USER":
-      return {
-        ...state,
-        selectedUser: action.payload,
-      };
-    case "SET_TEAM_MEMBERS":
-      return {
-        ...state,
-        teamMembers: [...state.teamMembers, state.selectedUser],
-        selectedUser: "",
-        promptMessage: "",
-      };
-    default:
-      return state;
-  }
-}
-
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(teamSelectionReducer, initialState);
 
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
