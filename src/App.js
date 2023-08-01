@@ -6,6 +6,7 @@ import { SelectionInfo } from "./components/SelectionInfo/SelectionInfo";
 import { SelectedMembers } from "./components/SelectedMembers/SelectedMembers";
 import { ErrorMessage } from "./components/ErrorMessage/ErrorMessage";
 import { PromptMessage } from "./components/PromptMessage/PromptMessage";
+
 const initialState = {
   users: [],
   selectedUser: "",
@@ -13,21 +14,6 @@ const initialState = {
   errorMessage: "",
   promptMessage: "Please Select Users",
 };
-
-// function reducer(state, action) {
-//   if (action.type === "SET_ERROR_MESSAGE") {
-//     return {
-//       ...state,
-//       errorMessage: action.payload,
-//     };
-//   }
-//   if (action.type === "SET_SELECTED_USER") {
-//     return {
-//       ...state,
-//       selectedUser: action.payload,
-//     };
-//   }
-// }
 
 function reducer(state, action) {
   switch (action.type) {
@@ -49,7 +35,9 @@ function reducer(state, action) {
     case "SET_TEAM_MEMBERS":
       return {
         ...state,
-        teamMembers: action.payload,
+        teamMembers: [...state.teamMembers, state.selectedUser],
+        selectedUser: "",
+        promptMessage: "",
       };
     default:
       return state;
@@ -58,12 +46,6 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  // const [users, setusers] = useState([]);
-  // const [selectedUser, setSelectedUser] = useState("");
-  // const [teamMembers, setTeamMembers] = useState([]);
-  // const [errorMessage, setErrorMessage] = useState("");
-  // const [promptMessage, setPromptMessage] = useState("Please Select Users");
 
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
@@ -74,39 +56,36 @@ function App() {
 
   function handleOnCLick() {
     // payload is switch function instead of [] for setTeamMembers & currentState is now state.teamMembers
-    dispatch({
-      type: "SET_TEAM_MEMBERS",
-      payload: (() => {
-        switch (true) {
-          case state.selectedUser === "":
-            dispatch({
-              type: "SET_ERROR_MESSAGE",
-              payload: "No User Selected",
-            });
 
-            return state.teamMembers;
-          case state.teamMembers.length > 2:
-            dispatch({
-              type: "SET_ERROR_MESSAGE",
-              payload: "Maximum Limit Reached",
-            });
-            return state.teamMembers;
-          case state.teamMembers.includes(state.selectedUser):
-            dispatch({
-              type: "SET_ERROR_MESSAGE",
-              payload: "Teammember Already Selected",
-            });
-            return state.teamMembers;
-          default:
-            dispatch({
-              type: "SET_ERROR_MESSAGE",
-              payload: "",
-            });
-            return [...state.teamMembers, state.selectedUser];
-        }
-      })(),
-    });
+    switch (true) {
+      case state.teamMembers.length > 2:
+        dispatch({
+          type: "SET_ERROR_MESSAGE",
+          payload: "Maximum Limit Reached",
+        });
+
+        break;
+      case state.selectedUser === "":
+        dispatch({
+          type: "SET_ERROR_MESSAGE",
+          payload: "No User Selected",
+        });
+        break;
+
+      case state.teamMembers.includes(state.selectedUser):
+        dispatch({
+          type: "SET_ERROR_MESSAGE",
+          payload: "Teammember Already Selected",
+        });
+        break;
+      default:
+        dispatch({
+          type: "SET_TEAM_MEMBERS",
+          payload: state.selectedUser,
+        });
+    }
   }
+
   return (
     <div className="App">
       <div className="body">
