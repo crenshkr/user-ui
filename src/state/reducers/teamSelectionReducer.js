@@ -3,7 +3,7 @@ export function teamSelectionReducer(state, action) {
     case "SET_USERS":
       return {
         ...state,
-        users: action.payload,
+        allUsers: action.payload,
       };
     case "SET_ERROR_MESSAGE":
       return {
@@ -18,7 +18,7 @@ export function teamSelectionReducer(state, action) {
     case "SET_TEAM_MEMBERS":
       return {
         ...state,
-        teamMembers: [...state.teamMembers, state.selectedUser],
+        chosenTeamMembers: [...state.chosenTeamMembers, state.selectedUser],
         selectedUser: "",
         promptMessage: "",
       };

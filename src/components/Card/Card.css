@@ -1,5 +1,18 @@
 .card {
   border: solid black 3px;
   border-radius: 5px;
-  margin: 0 1em 1em;
+  margin: 1em;
+  background-color: white;
+}
+
+.card--chosen {
+  color: gray;
+  border-color: gray;
+}
+
+.card--even {
+  background-color: rgb(143, 212, 143);
+}
+.card--odd {
+  background-color: rgb(215, 255, 215);
 }

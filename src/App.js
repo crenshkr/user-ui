@@ -9,9 +9,9 @@ import { PromptMessage } from "./components/PromptMessage/PromptMessage";
 import { teamSelectionReducer } from "./state/reducers/teamSelectionReducer";
 
 const initialState = {
-  users: [],
+  allUsers: [],
   selectedUser: "",
-  teamMembers: [],
+  chosenTeamMembers: [],
   errorMessage: "",
   promptMessage: "Please Select Users",
 };
@@ -30,7 +30,7 @@ function App() {
     // payload is switch function instead of [] for setTeamMembers & currentState is now state.teamMembers
 
     switch (true) {
-      case state.teamMembers.length > 2:
+      case state.chosenTeamMembers.length > 2:
         dispatch({
           type: "SET_ERROR_MESSAGE",
           payload: "Maximum Limit Reached",
@@ -44,7 +44,7 @@ function App() {
         });
         break;
 
-      case state.teamMembers.includes(state.selectedUser):
+      case state.chosenTeamMembers.includes(state.selectedUser):
         dispatch({
           type: "SET_ERROR_MESSAGE",
           payload: "Teammember Already Selected",
@@ -64,12 +64,17 @@ function App() {
         <div className="left-column">
           <SelectionInfo userName={state.selectedUser} />
           <button onClick={handleOnCLick}>Add Teammate</button>
-          <SelectedMembers teamMembers={state.teamMembers} />
+          <SelectedMembers chosenTeamMembers={state.chosenTeamMembers} />
           <ErrorMessage errorMessage={state.errorMessage} />
           <PromptMessage promptMessage={state.promptMessage} />
         </div>
         <div className="right-column">
-          <Cards users={state.users} dispatch={dispatch} />
+          <Cards
+            allUsers={state.allUsers}
+            selectedUsers={state.selectedUsers}
+            dispatch={dispatch}
+            chosenTeamMembers={state.chosenTeamMembers}
+          />
         </div>
       </div>
     </div>
