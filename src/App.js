@@ -1,7 +1,7 @@
-import React, { useReducer, useState } from "react";
-import "./App.css";
-import { PrimaryPage } from "./pages/PrimaryPage/PrimaryPage";
-import { LandingPage } from "./pages/LandingPage/LandingPage";
+import React, { useReducer } from 'react';
+import './App.css';
+import { PrimaryPage } from './pages/PrimaryPage/PrimaryPage';
+import { LandingPage } from './pages/LandingPage/LandingPage';
 
 const initialScreenState = {
   showPrimaryPage: false,
@@ -9,7 +9,7 @@ const initialScreenState = {
 
 function reducer(state, action) {
   switch (action.type) {
-    case "SHOW_PRIMARY_PAGE":
+    case 'SHOW_PRIMARY_PAGE':
       return { showPrimaryPage: true };
 
     default:
