@@ -59,12 +59,6 @@ export function PrimaryPage() {
     }
   }
 
-  // const currentScreen = {
-  //   landingPage: <LandingPage />,
-  //   primaryPage: <PrimaryPage />,
-  //   signInPage: <SignInPage />,
-  // };
-
   return (
     <div className="primary">
       <div className="body">
