@@ -20,16 +20,12 @@ function reducer(state, action) {
 function App() {
   const [state, dispatch] = useReducer(reducer, initialScreenState);
 
-  const handleButtonClick = () => {
-    dispatch({ type: "SHOW_PRIMARY_PAGE" });
-  };
-
   return (
     <div className="App">
       {state.showPrimaryPage ? (
         <PrimaryPage />
       ) : (
-        <LandingPage onButtonClick={handleButtonClick} />
+        <LandingPage dispatch={dispatch} />
       )}
     </div>
   );
