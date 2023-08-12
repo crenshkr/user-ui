@@ -11,21 +11,22 @@ function reducer(state, action) {
   switch (action.type) {
     case 'SHOW_PRIMARY_PAGE':
       return { showPrimaryPage: true };
-
+    case 'SHOW_LANDING_PAGE':
+      return { showPrimaryPage: false };
     default:
       return state;
   }
 }
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialScreenState);
+  const [appState, appStateDispatch] = useReducer(reducer, initialScreenState);
 
   return (
     <div className="App">
-      {state.showPrimaryPage ? (
-        <PrimaryPage />
+      {appState.showPrimaryPage ? (
+        <PrimaryPage appStateDispatch={appStateDispatch} />
       ) : (
-        <LandingPage dispatch={dispatch} />
+        <LandingPage appStateDispatch={appStateDispatch} />
       )}
     </div>
   );

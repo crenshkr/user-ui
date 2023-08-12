@@ -1,30 +1,30 @@
-import React from "react";
-import { useState, useEffect, useReducer } from "react";
+import React from 'react';
+import { useEffect, useReducer } from 'react';
 
-import "../../pages/PrimaryPage/primaryPage.css";
-import { Cards } from "../../components/Cards/Cards";
-import { SelectionInfo } from "../../components/SelectionInfo/SelectionInfo";
-import { SelectedMembers } from "../../components/SelectedMembers/SelectedMembers";
-import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
-import { PromptMessage } from "../../components/PromptMessage/PromptMessage";
-import { teamSelectionReducer } from "../../state/reducers/teamSelectionReducer";
+import '../../pages/PrimaryPage/primaryPage.css';
+import { Cards } from '../../components/Cards/Cards';
+import { SelectionInfo } from '../../components/SelectionInfo/SelectionInfo';
+import { SelectedMembers } from '../../components/SelectedMembers/SelectedMembers';
+import { ErrorMessage } from '../../components/ErrorMessage/ErrorMessage';
+import { PromptMessage } from '../../components/PromptMessage/PromptMessage';
+import { teamSelectionReducer } from '../../state/reducers/teamSelectionReducer';
 
 const initialState = {
   allUsers: [],
-  selectedUser: "",
+  selectedUser: '',
   chosenTeamMembers: [],
-  errorMessage: "",
-  promptMessage: "Please Select Users",
+  errorMessage: '',
+  promptMessage: 'Please Select Users',
 };
 
-export function PrimaryPage() {
+export function PrimaryPage({ appStateDispatch }) {
   const [state, dispatch] = useReducer(teamSelectionReducer, initialState);
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
+    fetch('https://jsonplaceholder.typicode.com/users')
       .then(response => response.json())
       // payload is users instead of []
-      .then(users => dispatch({ type: "SET_USERS", payload: users }));
+      .then(users => dispatch({ type: 'SET_USERS', payload: users }));
   }, []);
 
   function handleOnCLick() {
@@ -33,34 +33,51 @@ export function PrimaryPage() {
     switch (true) {
       case state.chosenTeamMembers.length > 2:
         dispatch({
-          type: "SET_ERROR_MESSAGE",
-          payload: "Maximum Limit Reached",
+          type: 'SET_ERROR_MESSAGE',
+          payload: 'Maximum Limit Reached',
         });
 
         break;
-      case state.selectedUser === "":
+      case state.selectedUser === '':
         dispatch({
-          type: "SET_ERROR_MESSAGE",
-          payload: "No User Selected",
+          type: 'SET_ERROR_MESSAGE',
+          payload: 'No User Selected',
         });
         break;
 
       case state.chosenTeamMembers.includes(state.selectedUser):
         dispatch({
-          type: "SET_ERROR_MESSAGE",
-          payload: "Teammember Already Selected",
+          type: 'SET_ERROR_MESSAGE',
+          payload: 'Teammember Already Selected',
         });
         break;
       default:
         dispatch({
-          type: "SET_TEAM_MEMBERS",
+          type: 'SET_TEAM_MEMBERS',
           payload: state.selectedUser,
         });
     }
   }
 
+  const buttonStyle = {
+    backgroundColor: 'lightblue',
+    border: 'none',
+    borderRadius: '5px',
+    marginLeft: '5em',
+    marginTop: '1em',
+  };
+
+  function handleBackButtonClick() {
+    appStateDispatch({ type: 'SHOW_LANDING_PAGE', payload: undefined });
+  }
+
   return (
     <div className="primary">
+      <div style={{ display: 'flex' }}>
+        <button onClick={handleBackButtonClick} style={buttonStyle}>
+          Back
+        </button>
+      </div>
       <div className="body">
         <div className="left-column">
           <SelectionInfo userName={state.selectedUser} />

@@ -1,9 +1,9 @@
-import React from "react";
-import "../LandingPage/landingPage.css";
+import React from 'react';
+import '../LandingPage/landingPage.css';
 
-export function LandingPage({ dispatch }) {
+export function LandingPage({ appStateDispatch }) {
   const handleButtonClick = () => {
-    dispatch({ type: "SHOW_PRIMARY_PAGE" });
+    appStateDispatch({ type: 'SHOW_PRIMARY_PAGE' });
   };
 
   return (
