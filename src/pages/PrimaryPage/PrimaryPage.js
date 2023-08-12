@@ -17,19 +17,19 @@ const initialState = {
   promptMessage: 'Please Select Users',
 };
 
-export function PrimaryPage({ appStateDispatch }) {
-  const [state, dispatch] = useReducer(teamSelectionReducer, initialState);
+export function PrimaryPage({ appStateDispatch, cachedUserChosenTeamMembers }) {
+  const [state, dispatch] = useReducer(teamSelectionReducer, {
+    ...initialState,
+    chosenTeamMembers: cachedUserChosenTeamMembers,
+  });
 
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/users')
       .then(response => response.json())
-      // payload is users instead of []
       .then(users => dispatch({ type: 'SET_USERS', payload: users }));
   }, []);
 
   function handleOnCLick() {
-    // payload is switch function instead of [] for setTeamMembers & currentState is now state.teamMembers
-
     switch (true) {
       case state.chosenTeamMembers.length > 2:
         dispatch({
@@ -68,7 +68,10 @@ export function PrimaryPage({ appStateDispatch }) {
   };
 
   function handleBackButtonClick() {
-    appStateDispatch({ type: 'SHOW_LANDING_PAGE', payload: undefined });
+    appStateDispatch({
+      type: 'SHOW_LANDING_PAGE',
+      payload: state.chosenTeamMembers,
+    });
   }
 
   return (
