@@ -7,3 +7,7 @@ To start app:
 ```
 npm start
 ```
+
+## Page Flow
+
+<img src="./documentation/page_flow.png" alt="Page Flow">
